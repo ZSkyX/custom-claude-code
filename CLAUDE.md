@@ -16,6 +16,8 @@ This document outlines the conventions and workflow for working with Claude Code
 ## Code Implementation
 
 ### Directory Structure
+
+#### For Python Projects
 Organize code into proper folders:
 ```
 project/
@@ -33,21 +35,78 @@ project/
     └── design/        # Technical design docs
 ```
 
+#### For JavaScript/TypeScript Projects
+
+**Backend Services** (Node.js/Express/Hono) - Organize by domain:
+
+```
+src/
+├── server/           # Server-side code (handlers, middleware, utils)
+├── mcp/              # MCP server implementation
+├── tests/            # Test files and mocks
+│   └── mocks/        # Mock data for testing
+└── types/            # Shared TypeScript types (optional)
+```
+
+**Frontend Applications** (Next.js/React) - Organize by component category:
+
+```
+web/
+├── app/              # Next.js app directory (routes + API routes)
+│   ├── api/          # API route handlers
+│   ├── [route]/      # Page routes
+│   ├── layout.tsx    # Root layout
+│   └── page.tsx      # Home page
+├── components/       # All React components organized by category
+│   ├── layout/       # Layout components (header, footer, nav)
+│   ├── pages/        # Page-specific components
+│   ├── providers/    # Context providers and app-level wrappers
+│   ├── shared/       # Reusable components across pages
+│   └── ui/           # Base UI components (buttons, inputs, cards)
+├── hooks/            # Custom React hooks
+├── lib/              # Utilities, types, and helper functions
+│   ├── types.ts      # TypeScript type definitions
+│   └── utils.ts      # Utility functions
+├── public/           # Static assets (images, fonts, icons)
+└── supabase/         # Database migrations and config (if using Supabase)
+```
+
+**Best Practices:**
+- Organize components by category (`layout/`, `pages/`, `shared/`, `ui/`) rather than by feature
+- Keep page-specific components in `components/pages/` for easy navigation
+- Use `components/shared/` for components used across multiple pages
+- Place base UI components (shadcn/ui, etc.) in `components/ui/`
+- Import files directly (avoid barrel files for better tree-shaking)
+- Keep backend and frontend code separated (`src/` vs `web/`)
+
 ### Coding Conventions
+
+#### General (All Projects)
 1. **No emojis** - Unless explicitly requested by the user
-2. **Use loggers** - Prefer logging over `print()` statements
-3. **Shell scripts** - Write simple scripts with clear variable-based arguments
+2. **Shell script location** - Place shell scripts in `scripts/` folder
+3. **Documentation** - Only create documentation when `/write-documentation` command is triggered
+
+#### For Python Projects
+1. **Use loggers** - Prefer logging over `print()` statements
+2. **Shell scripts** - Write simple scripts with clear variable-based arguments
    ```bash
    ARG1="xx"
    ARG2="yy"
    uv run python main.py --arg1 "$ARG1" --arg2 "$ARG2"
    ```
-4. **Shell script location** - Place shell scripts in `scripts/` folder
-5. **Documentation** - Only create documentation when `/write-documentation` command is triggered
+
+#### For JavaScript/TypeScript Projects
+1. **Use loggers** - Prefer logging over `console.log()` statements
+2. **Shell scripts** - Write simple scripts with clear variable-based arguments
+   ```bash
+   ARG1="xx"
+   ARG2="yy"
+   npm run script -- --arg1 "$ARG1" --arg2 "$ARG2"
+   ```
 
 ## Code Execution
 
-### Python Environment
+### For Python Projects
 1. **Always use `uv`** for Python package management
 2. **Activate environment** before running Python code:
    ```bash
@@ -58,6 +117,23 @@ project/
    uv add <package>
    # or
    uv pip install <package>
+   ```
+
+### For JavaScript/TypeScript Projects
+1. **Always use `npm`** for package management
+2. **Install dependencies** before running code:
+   ```bash
+   npm install
+   ```
+3. **Install packages** using:
+   ```bash
+   npm install <package>
+   # or for dev dependencies
+   npm install --save-dev <package>
+   ```
+4. **Run scripts** defined in package.json:
+   ```bash
+   npm run <script-name>
    ```
 
 ## Workflow Enforcement
